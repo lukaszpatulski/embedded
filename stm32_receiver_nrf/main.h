@@ -9,6 +9,7 @@
 #include "nrf24l01.h"
 #include "cmsis_os.h"
 #include "sleep.h"
+#include "adc.h"
 
 /* Thread ids */
 extern osThreadId ledTask;

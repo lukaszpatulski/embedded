@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep</IncludePath>
+              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -465,6 +465,16 @@
               <FileName>sleep.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\sleep\sleep.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>adc</GroupName>
+          <Files>
+            <File>
+              <FileName>adc.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\adc\adc.cpp</FilePath>
             </File>
           </Files>
         </Group>
