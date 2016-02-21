@@ -134,4 +134,13 @@ void RTCAlarm_IRQHandler(void)
 	
 }
 
+void ADC1_IRQHandler (void)
+{
+if(ADC1->SR & ADC_SR_EOC)
+  {
+  
+		
+  }
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
