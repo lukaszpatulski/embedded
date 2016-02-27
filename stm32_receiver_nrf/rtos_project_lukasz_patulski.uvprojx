@@ -314,7 +314,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0xfc01</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -435,6 +435,11 @@
               <FileName>leds.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\gpio\leds.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_dbgmcu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\stm32f10x_dbgmcu.c</FilePath>
             </File>
           </Files>
         </Group>

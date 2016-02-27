@@ -10,6 +10,7 @@ public:
 
 	void initAdc(void);
 	uint16_t ADC_GetConversionValue(void);
+	void ADC_startConversion(void);
 
 };
 

@@ -113,7 +113,6 @@ void EXTI2_IRQHandler(void)
 
 void RTCAlarm_IRQHandler(void)
 {
-	
 	if (RTC->CRH & RTC_CRL_ALRF)
 	{
 		osSignalSet(osAlarmTask, 0x02);
@@ -129,17 +128,17 @@ void RTCAlarm_IRQHandler(void)
 	  EXTI->PR |= EXTI_PR_PR17 ;
 
 		/* Set immediately alarm to obtain the best accuracy */
-		setAlarm(15);
+		setAlarm(10);
   }
-	
 }
 
-void ADC1_IRQHandler (void)
+void ADC1_2_IRQHandler (void)
 {
-if(ADC1->SR & ADC_SR_EOC)
+	
+	if(ADC1->SR & ADC_SR_EOC)
   {
-  
-		
+		osSignalSet(osAlarmTask, 0x03);
+		ADC1->SR &= ~ADC_SR_EOC;
   }
 }
 

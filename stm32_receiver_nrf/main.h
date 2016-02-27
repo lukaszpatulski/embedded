@@ -1,6 +1,7 @@
 #ifndef __main
 #define __main
 
+#include <stdio.h>
 #include <stm32f10x.h>
 #include "stm32f10x_gpio.h"
 #define osObjectsPublic                     // define objects in main module
@@ -10,6 +11,7 @@
 #include "cmsis_os.h"
 #include "sleep.h"
 #include "adc.h"
+#include "stm32f10x_dbgmcu.h"
 
 /* Thread ids */
 extern osThreadId ledTask;

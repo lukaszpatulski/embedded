@@ -53,6 +53,7 @@ void NMI_Handler(void);
 void HardFault_Handler(void);
 void EXTI2_IRQHandler(void);
 void RTCAlarm_IRQHandler(void);
+void ADC1_2_IRQHandler(void);
 	 
 extern uint8_t dataIn[32];
 extern int ready;
