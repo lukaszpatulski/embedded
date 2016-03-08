@@ -128,7 +128,7 @@ void RTCAlarm_IRQHandler(void)
 	  EXTI->PR |= EXTI_PR_PR17 ;
 
 		/* Set immediately alarm to obtain the best accuracy */
-		setAlarm(10);
+		setAlarm(15);
   }
 }
 

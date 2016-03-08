@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc</IncludePath>
+              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc;.\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -480,6 +480,16 @@
               <FileName>adc.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\adc\adc.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\flash\flash.cpp</FilePath>
             </File>
           </Files>
         </Group>
