@@ -314,7 +314,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0xfc01</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc</IncludePath>
+              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc;.\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -436,6 +436,11 @@
               <FileType>8</FileType>
               <FilePath>.\gpio\leds.cpp</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_dbgmcu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\stm32f10x_dbgmcu.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -475,6 +480,16 @@
               <FileName>adc.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\adc\adc.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\flash\flash.cpp</FilePath>
             </File>
           </Files>
         </Group>
