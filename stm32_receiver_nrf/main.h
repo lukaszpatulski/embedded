@@ -12,6 +12,7 @@
 #include "sleep.h"
 #include "adc.h"
 #include "stm32f10x_dbgmcu.h"
+#include "stm32f10x_i2c.h"
 
 /* Thread ids */
 extern osThreadId ledTask;

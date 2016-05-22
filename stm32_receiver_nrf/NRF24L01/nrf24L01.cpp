@@ -393,7 +393,7 @@ void NRF24L01_manager::NRF24L01_InitPins(void) {
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5;
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
 	//CE pins
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2;
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
 	
@@ -440,12 +440,12 @@ uint8_t NRF24L01_manager::SPI_Send(uint8_t data) {
 
 void NRF24L01_manager::NRF24L01_CE_Low(void) {
 
-	GPIO_ResetBits(GPIOB, GPIO_Pin_6);
+	GPIO_ResetBits(GPIOB, GPIO_Pin_2);
 }
 
 void NRF24L01_manager::NRF24L01_CE_High(void) {
 	
-	GPIO_SetBits(GPIOB, GPIO_Pin_6);
+	GPIO_SetBits(GPIOB, GPIO_Pin_2);
 }
 
 void NRF24L01_manager::NRF24L01_CSN_Low(void) {

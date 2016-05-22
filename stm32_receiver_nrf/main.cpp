@@ -1,12 +1,6 @@
 #include "main.h"
 #include <stdbool.h>
 
-
-typedef struct {
-uint8_t dataToSend[32];
-
-} memory_block_dataToSend_t;
-
 /* Processor state */
 sleepState processorState = RUN_MODE;
 
@@ -21,7 +15,10 @@ osMutexDef(enableClockMutex);
 
 /* Messages */
 osMessageQId Q_dataSender;		
-osMessageQDef (Q_dataSender, 3, uint32_t );	// name, queue_sz, type 
+osMessageQDef (Q_dataSender, 10, uint32_t );	// name, queue_sz, type 
+
+/* Memory pool */
+osPoolDef(osMessageTask, 10, uint32_t); //name, max number in memory pool, type
 
 // Thread functions
 static void osReceiverNRF24L01_Task(void const *arg);
@@ -45,11 +42,14 @@ osThreadDef(osAlarm_Task, osPriorityBelowNormal, 1, 0); /* osThreadDef(name, pri
 /* Virtual timer */
 osTimerDef(timer_handle_0, ledBlinking);
 
+void I2C_Setup(void);
+void set_output(void);
+
 
 int main (void) {
 	
 	/* ENABLE or DISABLE debug in stop mode */
-	DBGMCU_Config(DBGMCU_STOP, DISABLE);
+	DBGMCU_Config(DBGMCU_STOP, ENABLE);
 	
 	/* Enable RTC */
 	enableRTC();
@@ -70,6 +70,12 @@ int main (void) {
 	
 	/* NRF24L01 Initialization */
 	NRF24L01_manager_object.InitializeNRF24L01();
+	
+	////////////////////////
+	//I2C_Setup();
+	//set_output();
+	/////////////////////////
+	
 	
 	/* Create mutex */
 	enableClockMutex = osMutexCreate(osMutex(enableClockMutex));
@@ -124,10 +130,25 @@ static void osReceiverNRF24L01_Task(void const *arg)
 
 				sprintf (buffer, "%d mV", lastADCvalue);
 				memcpy(dataOut, buffer, 32 * sizeof(char));
+				
+				/* Allocate memory for queue */
+				osPoolId osMessageTask_ID;
+				osMessageTask_ID = osPoolCreate (osPool (osMessageTask));
+				if (osMessageTask_ID != NULL)  {
+					
+					// allocate a memory block
+					uint32_t *addr;
+					addr = (uint32_t *)osPoolAlloc (osMessageTask_ID);
+					
+					if (addr != NULL) {
+						/* Memory block was allocated
+						   Add to queue pointer */
+						osMessagePut(Q_dataSender, (uint32_t)dataOut, osWaitForever); 
+						osDelay(2000);
+					}
+				}
 
-				// Add o queue 
-				osMessagePut(Q_dataSender, (uint32_t)dataOut, osWaitForever); 
-				osDelay(2000);
+				
 			}
 		}
 
@@ -208,4 +229,57 @@ static void ledBlinking(void const *arg) {
 		ledToggle = true;
 	}
 }	
+
+void I2C_Setup(void)
+{
+
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    I2C_InitTypeDef  I2C_InitStructure;
+
+    /*enable I2C*/
+    I2C_Cmd(I2C1,ENABLE);
+	
+	  /* I2C1 clock enable */
+	  RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
+	
+	
+    /* I2C1 SDA and SCL configuration - PB6 SCL, PB7 SDA*/
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    /* I2C1 configuration */
+    I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
+    I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
+    I2C_InitStructure.I2C_OwnAddress1 = 0x00;
+    I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
+    I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+    I2C_InitStructure.I2C_ClockSpeed = 100000;
+    I2C_Init(I2C1, &I2C_InitStructure);
+
+}
+
+void set_output(void)
+{
+
+    /* initiate start sequence */
+    I2C_GenerateSTART(I2C1, ENABLE);
+    /* check start bit flag */
+    while(!I2C_GetFlagStatus(I2C1, I2C_FLAG_SB));
+    /*send write command to chip*/
+    I2C_Send7bitAddress(I2C1, (0x40), I2C_Direction_Transmitter);
+    /*check master is now in Tx mode*/
+    while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+    /*set pins*/
+    I2C_SendData(I2C1, 0x0F);
+    /*wait for byte send to complete*/
+    while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+    /*generate stop*/
+    I2C_GenerateSTOP(I2C1, ENABLE);
+    /*stop bit flag*/
+    while(I2C_GetFlagStatus(I2C1, I2C_FLAG_STOPF));
+
+}
 
