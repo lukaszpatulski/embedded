@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc;.\flash</IncludePath>
+              <IncludePath>.\gpio;.;.\NRF24L01;.\interrupt;.\sleep;.\adc;.\flash;.\i2c</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,7 +414,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>Standard Peripherial Drivers</GroupName>
           <Files>
             <File>
               <FileName>stm32f10x_gpio.c</FileName>
@@ -440,6 +440,11 @@
               <FileName>stm32f10x_dbgmcu.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\stm32f10x_dbgmcu.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\i2c\stm32f10x_i2c.c</FilePath>
             </File>
           </Files>
         </Group>

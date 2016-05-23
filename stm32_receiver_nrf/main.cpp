@@ -15,10 +15,10 @@ osMutexDef(enableClockMutex);
 
 /* Messages */
 osMessageQId Q_dataSender;		
-osMessageQDef (Q_dataSender, 10, uint32_t );	// name, queue_sz, type 
+osMessageQDef (Q_dataSender, 3, uint32_t );	// name, queue_sz, type 
 
 /* Memory pool */
-osPoolDef(osMessageTask, 10, uint32_t); //name, max number in memory pool, type
+//osPoolDef(osMessageTask, 10, uint32_t); //name, max number in memory pool, type
 
 // Thread functions
 static void osReceiverNRF24L01_Task(void const *arg);
@@ -118,20 +118,19 @@ static void osReceiverNRF24L01_Task(void const *arg)
 			restoreClockPower();
 		}
 		osMutexRelease(enableClockMutex);
-		
-		ledManager.resetRed();
-		uint8_t dataIn[32];
+
+		uint8_t dataIn[4];
 		if (NRF24L01_manager_object.getData(dataIn))
 		{
-			if(!strncmp( (char*)dataIn, "start", 5 )) 
+			if(!strncmp( (char*)dataIn, "star", 4 )) 
 			{
-				char buffer[32];
-				uint8_t dataOut[32];
+				//char buffer[4];
+				uint8_t dataOut[4] = {"yes"};
 
-				sprintf (buffer, "%d mV", lastADCvalue);
-				memcpy(dataOut, buffer, 32 * sizeof(char));
+				//sprintf (buffer, "%d mV", lastADCvalue);
+				//memcpy(dataOut, buffer, 4 * sizeof(char));
 				
-				/* Allocate memory for queue */
+				/* Allocate memory for queue 
 				osPoolId osMessageTask_ID;
 				osMessageTask_ID = osPoolCreate (osPool (osMessageTask));
 				if (osMessageTask_ID != NULL)  {
@@ -139,22 +138,24 @@ static void osReceiverNRF24L01_Task(void const *arg)
 					// allocate a memory block
 					uint32_t *addr;
 					addr = (uint32_t *)osPoolAlloc (osMessageTask_ID);
+					*addr = 
 					
 					if (addr != NULL) {
-						/* Memory block was allocated
-						   Add to queue pointer */
-						osMessagePut(Q_dataSender, (uint32_t)dataOut, osWaitForever); 
-						osDelay(2000);
+						 Memory block was allocated
+						   Add to queue pointer 
+						
 					}
 				}
-
+		*/
+				osMessagePut(Q_dataSender, (uint32_t)dataOut, osWaitForever); 
+				osDelay(2000);
 				
 			}
 		}
 
 		
 		
-		ledManager.setRed();
+		
 		ledManager.resetExternal();
 		goToSleep();
 	}
@@ -179,9 +180,9 @@ static void osAlarm_Task(void const *arg)
 		adcBatteryManager.ADC_startConversion();
 		osSignalWait(0x03,osWaitForever); // Wait for end of conversion
 		lastADCvalue = adcBatteryManager.ADC_GetConversionValue();
-		//ledManager.setExternal();
+		ledManager.setRed();
 		osDelay(4000);
-		//ledManager.resetExternal();
+		ledManager.resetRed();
 		goToSleep();
 
 	}
