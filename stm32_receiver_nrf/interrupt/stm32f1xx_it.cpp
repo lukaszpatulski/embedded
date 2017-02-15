@@ -30,40 +30,12 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include "stm32f1xx_it.h"
-/** @addtogroup STM32F0_Discovery_Peripheral_Examples
-  * @{
-  */
 
-/** @addtogroup IO_Toggle
-  * @{
-  */
-
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-uint8_t dataIn[32];
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
-
-/******************************************************************************/
-/*            Cortex-M0 Processor Exceptions Handlers                         */
-/******************************************************************************/
-
-/**
-  * @brief  This function handles NMI exception.
-  * @param  None
-  * @retval None
-  */
 void NMI_Handler(void)
 {
 }
 
-/**
-  * @brief  This function handles Hard Fault exception.
-  * @param  None
-  * @retval None
-  */
+
 void HardFault_Handler(void)
 {
 	while(1) {
@@ -71,43 +43,16 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
 }
 
-/******************************************************************************/
-/*                 STM32F0xx Peripherals Interrupt Handlers                   */
-/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
-/*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f0xx.s).                                               */
-/******************************************************************************/
 
-/**
-  * @brief  This function handles PPP interrupt request.
-  * @param  None
-  * @retval None
-  */
-/*void PPP_IRQHandler(void)
-{
-}*/
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 void EXTI2_IRQHandler(void)
 {
 	if((EXTI->IMR & EXTI_IMR_MR2) && (EXTI->PR & EXTI_PR_PR2))
 		
 	{
-		do {
-			if(NRF24L01_manager_object.ReceiveData() )
-			{
-				osSignalSet(ledTask, 0x01);
-			}	
-		}
-		while(!NRF24L01_manager_object.NRF24L01_Empty_RX_Fifo());
+	  osSignalSet(CommunicationThread::id_thread, RTX_thread::NEW_DATA_INTERRUPT);
+
 		//Set pending register
-	 EXTI->PR |= EXTI_PR_PR2 ;
+	  EXTI->PR |= EXTI_PR_PR2 ;
 	}
 }
 
@@ -115,7 +60,7 @@ void RTCAlarm_IRQHandler(void)
 {
 	if (RTC->CRH & RTC_CRL_ALRF)
 	{
-		osSignalSet(osAlarmTask, 0x02);
+		osSignalSet(AlarmThread::id_thread, RTX_thread::ALARM_INTERRUPT);
 		
 		/* This bit is set by hardware when the 32-bit programmable counter reaches the threshold set 
 			 in the RTC_ALR register. An interrupt is generated if ALRIE=1 in the RTC_CRH register. It
@@ -128,7 +73,7 @@ void RTCAlarm_IRQHandler(void)
 	  EXTI->PR |= EXTI_PR_PR17 ;
 
 		/* Set immediately alarm to obtain the best accuracy */
-		setAlarm(15);
+		setAlarm(AlarmThread::alarmValue);
   }
 }
 
@@ -137,7 +82,7 @@ void ADC1_2_IRQHandler (void)
 	
 	if(ADC1->SR & ADC_SR_EOC)
   {
-		osSignalSet(osAlarmTask, 0x03);
+		osSignalSet(ExecutorThread::id_thread, RTX_thread::ADC_INTERRUPT);
 		ADC1->SR &= ~ADC_SR_EOC;
   }
 }
@@ -150,5 +95,3 @@ if(ADC1->SR & ADC_SR_EOC)
 		
   }
 }
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

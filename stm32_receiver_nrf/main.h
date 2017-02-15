@@ -13,10 +13,13 @@
 #include "adc.h"
 #include "stm32f10x_dbgmcu.h"
 #include "stm32f10x_i2c.h"
+#include "flash.h"
 
-/* Thread ids */
-extern osThreadId ledTask;
-extern osThreadId osAlarmTask;
+#include "os_timer.h"
+#include "os_threads.h"
+#include "os_queue.h"
+#include "os_mutex.h"
+
 
 #endif
 

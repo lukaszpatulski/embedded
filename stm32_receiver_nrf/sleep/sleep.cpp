@@ -1,4 +1,7 @@
 #include "sleep.h"
+#include "flash.h"
+
+extern Flash alarmValueFlash;
 
 void goToSleep(void) {
 	
@@ -159,6 +162,12 @@ void enableRTC(void)
 /* Set alaram in seconds */
 void setAlarm(uint32_t AlarmValue)
 {
+	// If alarm value present in flash memory 
+	if(alarmValueFlash.readFlash() != 0xFFFF)
+	{
+		AlarmValue = (uint32_t)alarmValueFlash.readFlash();
+	}
+	
 	/* Get current RTC counter value */
 	uint16_t tmp = 0;
   tmp = RTC->CNTL;

@@ -518,12 +518,12 @@ void NRF24L01_manager::InitializeNRF24L01(void)
 				0x7E
 		};
 	
-		/* Initialize NRF24L01+ on channel 15 and 32bytes of payload */
+		/* Initialize NRF24L01+ on channel 15 and 4bytes of payload */
     /* By default 2Mbps data rate and 0dBm output power */
     /* NRF24L01 goes to RX mode by default */
     NRF24L01_Init(15, 4);
 
-    /* Set 2MBps data rate and -18dBm output power */
+    /* Set 2MBps data rate and 0dBm output power */
     NRF24L01_SetRF(NRF24L01_DataRate_1M, NRF24L01_OutputPower_0dBm);
 
     /* Set my address, 5 bytes */

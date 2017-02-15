@@ -8,7 +8,7 @@ void goToSleep(void);
 void restoreClockPower(void);
 
 void enableRTC(void);
-void setAlarm(uint32_t AlarmValue);
+void setAlarm(uint32_t AlarmValue = 10);
 
 typedef enum {
 	

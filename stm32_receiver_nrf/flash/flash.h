@@ -10,12 +10,17 @@ class Flash
 {
 	
 public:
+	
+	Flash(void);
 
-	void write(void);
-	void pageErase(uint32_t Page_Address);
-	void programHalfWordFlash(uint32_t address, uint16_t data);
+	void write(uint16_t data);
+	void pageErase();
+	void programHalfWordFlash(uint16_t data);
+	uint16_t readFlash(void);
 
 private:
+	
+	uint32_t baseAddress_127kB;
 
 	void unlock(void);
 

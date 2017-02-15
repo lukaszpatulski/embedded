@@ -1,14 +1,24 @@
 #include "flash.h"
 
-void Flash::write(void)
+Flash::Flash(void): baseAddress_127kB(0x0801FC00) {}
+
+void Flash::write(uint16_t data)
 {
 	unlock();
-	
+
 	clearFlags();
-	
-	
+
+	pageErase();
+
+	programHalfWordFlash(data);
+
 	lock();
-	
+
+}
+
+uint16_t Flash::readFlash(void)
+{   
+    return *(uint16_t *)(baseAddress_127kB);
 }
 
 void Flash::unlock(void)
@@ -29,12 +39,12 @@ void Flash::clearFlags(void)
 	            
 }
 
-void Flash::pageErase(uint32_t Page_Address)
+void Flash::pageErase()
 {
 	/* Page Erase chosen */
 	FLASH->CR |= FLASH_CR_PER;
 	/* Flash Address */
-	FLASH->AR = Page_Address;
+	FLASH->AR = baseAddress_127kB;
 	/* Start erasing last page of flash memory */
 	FLASH->CR |= FLASH_CR_STRT;
 	
@@ -45,12 +55,12 @@ void Flash::pageErase(uint32_t Page_Address)
   FLASH->CR &= ~FLASH_CR_PER;
 }
 
-void Flash::programHalfWordFlash(uint32_t address, uint16_t data)
+void Flash::programHalfWordFlash(uint16_t data)
 {
 	/* Flash programming chosen */
 	FLASH->CR |= FLASH_CR_PG;
 	
-	*(__IO uint16_t*)address = data;
+	*(__IO uint16_t*)baseAddress_127kB = data;
 	
 	/* Wait for end of programming page */
 	while (!(FLASH->SR & FLASH_SR_EOP)) {}
